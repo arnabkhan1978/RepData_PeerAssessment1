@@ -1,13 +1,9 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 if ("activity.zip" %in% dir()) unzip("activity.zip")
 
 activity <- read.csv("activity.csv", na.strings = "NA",
@@ -15,7 +11,8 @@ activity <- read.csv("activity.csv", na.strings = "NA",
 ```
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+```r
 # Calculate the total number of steps taken per day
 dailySteps <- tapply(activity$steps, activity$date, sum)
 
@@ -26,16 +23,31 @@ hist(dailySteps
      ,main="Daily Activity in Oct and Nov 2012")
 # add mean as dotted line
 abline(v=mean(dailySteps,na.rm=TRUE),col="red",lty="dashed",lwd=3)
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+```r
 paste("Mean of total number of steps taken each day:"
       ,mean(dailySteps,na.rm=TRUE))
+```
 
+```
+## [1] "Mean of total number of steps taken each day: 10766.1886792453"
+```
+
+```r
 paste("Median of total number of steps taken eachday: "
       ,median(dailySteps,na.rm=TRUE))
 ```
 
+```
+## [1] "Median of total number of steps taken eachday:  10765"
+```
+
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 # Calculate the average number of steps taken per interval across days
 intervalSteps <- tapply(activity$steps, activity$interval, mean, na.rm=TRUE)
 
@@ -50,23 +62,45 @@ plot(names(intervalSteps)
      ,main="Activity in Oct and Nov 2012 by Interval")
 # add mean as dotted line
 abline(h=mean(intervalSteps,na.rm=TRUE),col="red",lty="dashed")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+```r
 # Which 5-minute interval, on average across all the days in the dataset
 # contains the maximum number of steps?
 paste("Maximum number of average steps taken in an interval: "
       ,max(intervalSteps))
+```
+
+```
+## [1] "Maximum number of average steps taken in an interval:  206.169811320755"
+```
+
+```r
 paste("Interval with Maximum number of average steps: "
       ,names(intervalSteps[intervalSteps == max(intervalSteps)]))
+```
+
+```
+## [1] "Interval with Maximum number of average steps:  835"
 ```
 
 
 ## Imputing missing values
 ###Strategy: Fill in the missing values in the dataset with the mean for that 5-minute interval
-```{r}
+
+```r
 #Calculate and report the total number of missing values in the dataset 
 paste("Total number of rows with NAs: "
       ,sum(is.na(activity$steps)))
+```
 
+```
+## [1] "Total number of rows with NAs:  2304"
+```
+
+```r
 #Separate NA and not NA rows
 activityNA <- activity[is.na(activity$steps),]
 activityNoNA <- activity[!is.na(activity$steps),]
@@ -98,20 +132,49 @@ legend("topright", c("Imputed", "Non-imputed")
 
 # add mean as dotted line
 abline(v=mean(dailyStepsNoNA),col="yellow",lty="dashed",lwd=3)
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+```r
 paste("Mean of total number of daily steps without Impute: "
       ,mean(dailySteps,na.rm=TRUE))
+```
+
+```
+## [1] "Mean of total number of daily steps without Impute:  10766.1886792453"
+```
+
+```r
 paste("Mean of total number of daily steps  with  Impute : "
       ,mean(dailyStepsNoNA))
+```
 
+```
+## [1] "Mean of total number of daily steps  with  Impute :  10766.1886792453"
+```
+
+```r
 paste("Median of total number of daily steps without Impute: "
       ,median(dailySteps,na.rm=TRUE))
+```
+
+```
+## [1] "Median of total number of daily steps without Impute:  10765"
+```
+
+```r
 paste("Median of total number of daily steps  with  Impute : "
       ,median(dailyStepsNoNA,na.rm=TRUE))
 ```
 
+```
+## [1] "Median of total number of daily steps  with  Impute :  10766.1886792453"
+```
+
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 # day of week as Sunday(0) or Saturday(6)
 activityWeekend <- activity[as.POSIXlt(activity$date)$wday == 0 | as.POSIXlt(activity$date)$wday == 6,]
 
@@ -152,3 +215,5 @@ plot(names(intervalStepsWeekend)
      ,main="Weekend Activity in Oct/Nov 2012")
 abline(h=mean(intervalStepsWeekend,na.rm=TRUE),col="red",lty="dashed",lwd=2)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
